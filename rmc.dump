@@ -107,7 +107,8 @@ CREATE TABLE rmc.datapoint (
     signif text,
     bstate text,
     dev text,
-    pvalue text
+    pvalue text,
+    ctype text
 );
 
 
@@ -147,7 +148,7 @@ CREATE TABLE rmc.sdfile (
     mw text,
     inchi text,
     cn text,
-    sdfile text,
+    smiles text,
     fa text,
     rn text,
     stype text
@@ -197,6 +198,20 @@ CREATE INDEX datapoint_did_idx ON rmc.datapoint USING btree (did);
 
 
 --
+-- Name: datapoint_substance_idx; Type: INDEX; Schema: rmc; Owner: mclark
+--
+
+CREATE INDEX datapoint_substance_idx ON rmc.datapoint USING btree (substance);
+
+
+--
+-- Name: datapoint_target_idx; Type: INDEX; Schema: rmc; Owner: mclark
+--
+
+CREATE INDEX datapoint_target_idx ON rmc.datapoint USING btree (target);
+
+
+--
 -- Name: fact_inchi_idx; Type: INDEX; Schema: rmc; Owner: mclark
 --
 
@@ -236,6 +251,13 @@ CREATE INDEX target_tid_idx ON rmc.target USING btree (tid);
 --
 
 CREATE INDEX target_tuniprot_idx ON rmc.target USING btree (tuniprot);
+
+
+--
+-- Name: target_tuniprot_idx1; Type: INDEX; Schema: rmc; Owner: mclark
+--
+
+CREATE INDEX target_tuniprot_idx1 ON rmc.target USING btree (tuniprot);
 
 
 --
