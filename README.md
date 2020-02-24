@@ -1,6 +1,6 @@
 # RMCLoader
 Create a postgresql database from Reaxys RMC data files
-<br>
+<br><br>
 0. download RMC files and unzip them<br>
 1. create a postgresql database<br>
 2. modify database/owner name in rmc.dump file to your system<br>
