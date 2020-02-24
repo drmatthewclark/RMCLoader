@@ -8,6 +8,7 @@ import psycopg2 as psql
 from psycopg2.extensions import AsIs
 import glob
 from version import rmcversion
+from version import dbname
 
 def main():
   for filepath in glob.iglob('./' + rmcversion + '_citations_*.xml'):
@@ -15,7 +16,7 @@ def main():
 
 def readfile(fname):
   print(fname)
-  conn=psql.connect(user='mclark')
+  conn=psql.connect(user=dbname)
   tree = ET.parse(fname);
   root = tree.getroot()
   sql = 'insert into rmc.citation (%s) values %s'

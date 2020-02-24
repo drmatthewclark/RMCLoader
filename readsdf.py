@@ -10,6 +10,7 @@ from version import rmcversion
 from rdkit import Chem
 from rdkit import RDLogger
 import shutil
+from version import dbname
 
 nl = '\n'
 
@@ -70,7 +71,7 @@ def readfile(fname):
     lg = RDLogger.logger()
     lg.setLevel(RDLogger.CRITICAL)
     count = 0
-    conn=psql.connect(user='mclark')
+    conn=psql.connect(user=dbname)
     with open(fname, 'r') as file:
         while True:
             sdrecord = readnextSDfile(file)
