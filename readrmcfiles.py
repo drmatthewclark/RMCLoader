@@ -81,7 +81,7 @@ def readassay():
 
   delete('rmc.assay')
   sql = 'insert into rmc.assay (%s) values %s'
-  for filepath in glob.iglob('./' + rmcversion + '_assays_*.xml'):
+  for filepath in glob.iglob('./' + rmcversion + '_assays_*.xml.gz'):
     readfile(filepath, 'aid', dbname, sql)
 
 
@@ -89,7 +89,7 @@ def readcitation():
   """ read the citation files into the citation table """
   delete('rmc.citation')
   sql = 'insert into rmc.citation (%s) values %s'
-  for filepath in glob.iglob('./' + rmcversion + '_citations_*.xml'):
+  for filepath in glob.iglob('./' + rmcversion + '_citations_*.xml.gz'):
     readfile(filepath, 'cid', dbname, sql)
 
 
@@ -98,7 +98,7 @@ def readdatapoint():
 
   delete('rmc.datapoint')
   sql = 'insert into rmc.datapoint (%s) values %s'
-  for filepath in glob.iglob('./' + rmcversion + '_datapoints_*.xml'):
+  for filepath in glob.iglob('./' + rmcversion + '_datapoints_*.xml.gz'):
     readfile(filepath, 'did', dbname, sql)
 
 
@@ -106,7 +106,7 @@ def readfact():
   """ read the facts file into the fact table """
   delete('rmc.fact')
   sql = 'insert into rmc.fact (%s) values %s'
-  for filepath in glob.iglob('./' + rmcversion + '_facts_*.xml'):
+  for filepath in glob.iglob('./' + rmcversion + '_facts_*.xml.gz'):
     readfile(filepath, 'rxid', dbname, sql)
 
 
@@ -116,7 +116,7 @@ def readtarget():
     levels deep
     """
     delete('rmc.target')
-    for filepath in glob.iglob('./' + rmcversion + '_targets*.xml'):
+    for filepath in glob.iglob('./' + rmcversion + '_targets*.xml.gz'):
         readtargetfile(filepath)
 
 def readtargetfile(fname):
@@ -260,5 +260,5 @@ def readsdfile():
     not an XML file
   """
   delete('rmc.sdfile')
-  for filepath in glob.iglob('./' + rmcversion + '*.sdf'):
+  for filepath in glob.iglob('./' + rmcversion + '*.sdf.gz'):
     readsdfiles(filepath)
