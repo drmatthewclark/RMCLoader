@@ -2,7 +2,7 @@
 # impott the set of RMC files into a postgres database.
 # this assumes that the current directory is the one with the file set.
 #
-# TODO: enhance so one does not have to unzip the files first
+# reads the unzipped gz file as supplied by Elsevier
 #
 import readrmcfiles as rmc
 
