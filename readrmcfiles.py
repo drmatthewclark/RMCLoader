@@ -11,6 +11,10 @@ from psycopg2.extensions import AsIs
 import glob
 import gzip
 
+# for rdkit Mol to Smiles
+from rdkit import Chem
+from rdkit import RDLogger
+
 def readfile(fname, key, dbname, sql):
     """ 
     read an xml file into the designated database
@@ -47,6 +51,22 @@ def readfile(fname, key, dbname, sql):
 
           if (tag != 'Copyright'):
              data[tag] = value
+        # some file have sub-sub elements
+          for selm in subelem:
+              for subsubelem in selm:
+                prefix, has_namespace, postfix = subsubelem.tag.partition('}')
+                value = subsubelem.text.strip();
+                if has_namespace:
+                    tag = postfix.strip()  # strip all namespaces
+                # create array of data when multiple values are present
+                if tag in data:
+                   newlist = data[tag]
+                   newlist.append(value) 
+                   data[tag] = newlist
+                else:
+                    newlist = list()
+                    newlist.append(value)
+                    data[tag] = newlist 
 
        columns = data.keys()
        values = [data[column] for column in columns]
@@ -116,61 +136,11 @@ def readtarget():
     levels deep
     """
     delete('rmc.target')
+    sql = 'insert into rmc.target (%s) values %s'
     for filepath in glob.iglob('./' + rmcversion + '_targets*.xml.gz'):
-        readtargetfile(filepath)
-
-def readtargetfile(fname):
-  """ function to read the target file and more complex XML """
-  print(fname)
-  sql = 'insert into rmc.target (%s) values %s'
-  conn=psql.connect(user=dbname)
-  tree = ET.parse(gzip.open(fname));
-  root = tree.getroot()
-  cur = conn.cursor()
-
-  for elem in root:
-     id = elem.attrib.get('{http://www.w3.org/1999/02/22-rdf-syntax-ns#}about')
-     id = id[id.find('#')+1:].strip()  # the number is after the pound sign
-     data = {}
-     data['tid'] = id
-     for subelem in elem:
-        prefix, has_namespace, postfix = subelem.tag.partition('}')
-        if has_namespace:
-            tag = postfix.strip()  # strip all namespaces
-        if (tag != 'Copyright'):
-           data[tag] = subelem.text
-
-        for selm in subelem:
-          for subsubelem in selm:
-            prefix, has_namespace, postfix = subsubelem.tag.partition('}')
-            value = subsubelem.text.strip();
-            if has_namespace:
-                tag = postfix.strip()  # strip all namespaces
-                # create array of data when multiple values are present
-            if tag in data:
-               newlist = data[tag]
-               newlist.append(value) 
-               data[tag] = newlist
-            else:
-               newlist = list()
-               newlist.append(value)
-               data[tag] = newlist 
-
-        columns = data.keys()
-        values = [data[column] for column in columns]
-        if debug:
-            print (columns, values )
-            print(cur.mogrify(sql, (AsIs(','.join(columns)), tuple(values))))
-        else:
-            cur.execute(sql, (AsIs(','.join(columns)), tuple(values)))
-
-  conn.commit()
-  conn.close()
-
+        readfile(filepath, 'tid', dbname, sql)
 
 nl = '\n'  # newline; cound be \r\n if necessary
-
-
 
 def readnextSDfile(file):
     """ read the next SDFile from the file of concatenated SDfiles
@@ -203,7 +173,8 @@ def readnextSDfile(file):
         sdfile = sdfile + line + nl
   
     sdfile = sdfile.strip()[:sdfile.find('M  END')+6]
- 
+    # create smiles as it is much more compact than the sdfile
+    # one can add the sdfile too if you want
     try: 
         mol = Chem.MolFromMolBlock(sdfile)
         if mol:
@@ -240,7 +211,6 @@ def readsdfiles(fname):
 
 
 
-
 def writedb(conn, data):
      """ write a SDFile record the database """
 
@@ -252,7 +222,6 @@ def writedb(conn, data):
              print(cur.mogrify(sql, (AsIs(','.join(columns)), tuple(values))))
          else:
              cur.execute(sql, (AsIs(','.join(columns)), tuple(values)))
-
 
 
 def readsdfile():
