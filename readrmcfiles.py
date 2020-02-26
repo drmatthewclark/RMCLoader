@@ -9,6 +9,7 @@ import psycopg2 as psql
 from   psycopg2 import sql
 from psycopg2.extensions import AsIs
 import glob
+import gzip
 
 def readfile(fname, key, dbname, sql):
     """ 
@@ -21,7 +22,7 @@ def readfile(fname, key, dbname, sql):
     """
     print(fname)
     conn=psql.connect(user=dbname)
-    tree = ET.parse(fname);
+    tree = ET.parse(gzip(fname));
     root = tree.getroot()
     cur = conn.cursor()
 
@@ -67,6 +68,8 @@ def delete(tablename):
     with conn.cursor() as cur:
         print('deleting records from', tablename)
         query = 'delete from ' + tablename
+        # this is a criminal statmenet but the query parameter replacement
+        # syntax doesn't work for table names, only data elements.
         cur.execute(query)
     conn.commit()
     conn.close()
@@ -121,7 +124,7 @@ def readtargetfile(fname):
   print(fname)
   sql = 'insert into rmc.target (%s) values %s'
   conn=psql.connect(user=dbname)
-  tree = ET.parse(fname);
+  tree = ET.parse(gzip(fname));
   root = tree.getroot()
   cur = conn.cursor()
 
@@ -200,7 +203,7 @@ def readnextSDfile(file):
         sdfile = sdfile + line + nl
   
     sdfile = sdfile.strip()[:sdfile.find('M  END')+6]
-   
+ 
     try: 
         mol = Chem.MolFromMolBlock(sdfile)
         if mol:
@@ -221,7 +224,7 @@ def readsdfiles(fname):
     lg.setLevel(RDLogger.CRITICAL)
     count = 0
     conn=psql.connect(user=dbname)
-    with open(fname, 'r') as file:
+    with gzip.open(fname, 'r') as file:
         while True:
             sdrecord = readnextSDfile(file)
             if len(sdrecord) < 2:
