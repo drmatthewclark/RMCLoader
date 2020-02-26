@@ -2,7 +2,7 @@
 Create a postgresql database from Reaxys RMC data files.<br>
 Access to the RMC data files is by licence from Elsevier.
 <br><br>
-1. download RMC files and unzip them<br>
+1. download RMC files from Elsevier<br>
 2. create a postgresql database<br>
 3. create the tables with psql < rmc.dump <br>
 4. modify dbname and rmc version in version.py<br>
