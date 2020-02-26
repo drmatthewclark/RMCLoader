@@ -1,5 +1,5 @@
 # rmc file release number
-rmcversion = 'rx190501'
+rmcversion = 'rx200171'
 dbname='mclark'
 debug = False
 
@@ -22,7 +22,7 @@ def readfile(fname, key, dbname, sql):
     """
     print(fname)
     conn=psql.connect(user=dbname)
-    tree = ET.parse(gzip(fname));
+    tree = ET.parse(gzip.open(fname));
     root = tree.getroot()
     cur = conn.cursor()
 
@@ -124,7 +124,7 @@ def readtargetfile(fname):
   print(fname)
   sql = 'insert into rmc.target (%s) values %s'
   conn=psql.connect(user=dbname)
-  tree = ET.parse(gzip(fname));
+  tree = ET.parse(gzip.open(fname));
   root = tree.getroot()
   cur = conn.cursor()
 
