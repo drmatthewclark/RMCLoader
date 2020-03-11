@@ -3,7 +3,6 @@ rmcversion = 'rx200171'
 dbname='mclark'
 debug = False
 
-import xml.dom.minidom
 import xml.etree.ElementTree as ET
 import psycopg2 as psql
 from   psycopg2 import sql
