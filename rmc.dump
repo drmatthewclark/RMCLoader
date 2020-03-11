@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 11.6
--- Dumped by pg_dump version 11.6
+-- Dumped from database version 11.7
+-- Dumped by pg_dump version 11.7
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -17,11 +17,10 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- Name: rmc; Type: SCHEMA; Schema: -; 
+-- Name: rmc; Type: SCHEMA; Schema: -; Owner: -
 --
 
 CREATE SCHEMA rmc;
-
 
 
 SET default_tablespace = '';
@@ -29,11 +28,11 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: assay; Type: TABLE; Schema: rmc; 
+-- Name: assay; Type: TABLE; Schema: rmc; Owner: -
 --
 
 CREATE TABLE rmc.assay (
-    aid bigint,
+    aid bigint NOT NULL,
     aftype text,
     categ text,
     aname text,
@@ -45,13 +44,12 @@ CREATE TABLE rmc.assay (
 );
 
 
-
 --
--- Name: citation; Type: TABLE; Schema: rmc; 
+-- Name: citation; Type: TABLE; Schema: rmc; Owner: -
 --
 
 CREATE TABLE rmc.citation (
-    cid bigint,
+    cid bigint NOT NULL,
     dt text,
     pa text,
     pcc text,
@@ -72,9 +70,8 @@ CREATE TABLE rmc.citation (
 );
 
 
-
 --
--- Name: datapoint; Type: TABLE; Schema: rmc; 
+-- Name: datapoint; Type: TABLE; Schema: rmc; Owner: -
 --
 
 CREATE TABLE rmc.datapoint (
@@ -90,7 +87,7 @@ CREATE TABLE rmc.datapoint (
     unit text,
     paureus real,
     paurig text,
-    did bigint,
+    did bigint NOT NULL,
     mroute text,
     value text,
     text text,
@@ -109,13 +106,12 @@ CREATE TABLE rmc.datapoint (
 );
 
 
-
 --
--- Name: fact; Type: TABLE; Schema: rmc; 
+-- Name: fact; Type: TABLE; Schema: rmc; Owner: -
 --
 
 CREATE TABLE rmc.fact (
-    rxid bigint,
+    rxid bigint NOT NULL,
     cn text,
     mf text,
     mw real,
@@ -132,13 +128,12 @@ CREATE TABLE rmc.fact (
 );
 
 
-
 --
--- Name: sdfile; Type: TABLE; Schema: rmc; 
+-- Name: sdfile; Type: TABLE; Schema: rmc; Owner: -
 --
 
 CREATE TABLE rmc.sdfile (
-    xrn bigint,
+    xrn bigint NOT NULL,
     mf text,
     mw text,
     inchi text,
@@ -150,13 +145,12 @@ CREATE TABLE rmc.sdfile (
 );
 
 
-
 --
--- Name: target; Type: TABLE; Schema: rmc; 
+-- Name: target; Type: TABLE; Schema: rmc; Owner: -
 --
 
 CREATE TABLE rmc.target (
-    tid bigint,
+    tid bigint NOT NULL,
     role text,
     key text,
     skey text,
@@ -182,72 +176,126 @@ CREATE TABLE rmc.target (
 );
 
 
+--
+-- Name: citation cid_key; Type: CONSTRAINT; Schema: rmc; Owner: -
+--
+
+ALTER TABLE ONLY rmc.citation
+    ADD CONSTRAINT cid_key PRIMARY KEY (cid);
+
 
 --
--- Name: datapoint_did_idx; Type: INDEX; Schema: rmc; 
+-- Name: datapoint datapont_pkey; Type: CONSTRAINT; Schema: rmc; Owner: -
+--
+
+ALTER TABLE ONLY rmc.datapoint
+    ADD CONSTRAINT datapont_pkey PRIMARY KEY (did);
+
+
+--
+-- Name: assay key; Type: CONSTRAINT; Schema: rmc; Owner: -
+--
+
+ALTER TABLE ONLY rmc.assay
+    ADD CONSTRAINT key PRIMARY KEY (aid);
+
+
+--
+-- Name: fact pkey; Type: CONSTRAINT; Schema: rmc; Owner: -
+--
+
+ALTER TABLE ONLY rmc.fact
+    ADD CONSTRAINT pkey PRIMARY KEY (rxid);
+
+
+--
+-- Name: sdfile sdfile_key; Type: CONSTRAINT; Schema: rmc; Owner: -
+--
+
+ALTER TABLE ONLY rmc.sdfile
+    ADD CONSTRAINT sdfile_key PRIMARY KEY (xrn);
+
+
+--
+-- Name: target target_key; Type: CONSTRAINT; Schema: rmc; Owner: -
+--
+
+ALTER TABLE ONLY rmc.target
+    ADD CONSTRAINT target_key PRIMARY KEY (tid);
+
+
+--
+-- Name: citation_doi_idx; Type: INDEX; Schema: rmc; Owner: -
+--
+
+CREATE INDEX citation_doi_idx ON rmc.citation USING btree (doi);
+
+
+--
+-- Name: citation_pn_idx; Type: INDEX; Schema: rmc; Owner: -
+--
+
+CREATE INDEX citation_pn_idx ON rmc.citation USING btree (pn);
+
+
+--
+-- Name: datapoint_citation_idx; Type: INDEX; Schema: rmc; Owner: -
+--
+
+CREATE INDEX datapoint_citation_idx ON rmc.datapoint USING btree (citation);
+
+
+--
+-- Name: datapoint_did_idx; Type: INDEX; Schema: rmc; Owner: -
 --
 
 CREATE INDEX datapoint_did_idx ON rmc.datapoint USING btree (did);
 
 
 --
--- Name: datapoint_substance_idx; Type: INDEX; Schema: rmc; 
+-- Name: datapoint_substance_idx; Type: INDEX; Schema: rmc; Owner: -
 --
 
 CREATE INDEX datapoint_substance_idx ON rmc.datapoint USING btree (substance);
 
 
 --
--- Name: datapoint_target_idx; Type: INDEX; Schema: rmc; 
+-- Name: datapoint_target_idx; Type: INDEX; Schema: rmc; Owner: -
 --
 
 CREATE INDEX datapoint_target_idx ON rmc.datapoint USING btree (target);
 
 
 --
--- Name: fact_inchi_idx; Type: INDEX; Schema: rmc; 
+-- Name: fact_inchi_idx; Type: INDEX; Schema: rmc; Owner: -
 --
 
 CREATE INDEX fact_inchi_idx ON rmc.fact USING btree (inchi);
 
 
 --
--- Name: fact_rxid_idx; Type: INDEX; Schema: rmc; 
+-- Name: sdfile_inchi_idx; Type: INDEX; Schema: rmc; Owner: -
 --
 
-CREATE INDEX fact_rxid_idx ON rmc.fact USING btree (rxid);
-
-
---
--- Name: sdfile_xrn_idx; Type: INDEX; Schema: rmc; 
---
-
-CREATE INDEX sdfile_xrn_idx ON rmc.sdfile USING btree (xrn);
+CREATE INDEX sdfile_inchi_idx ON rmc.sdfile USING btree (inchi);
 
 
 --
--- Name: target_key_idx; Type: INDEX; Schema: rmc; 
---
-
-CREATE INDEX target_key_idx ON rmc.target USING btree (key);
-
-
---
--- Name: target_tid_idx; Type: INDEX; Schema: rmc; 
+-- Name: target_tid_idx; Type: INDEX; Schema: rmc; Owner: -
 --
 
 CREATE INDEX target_tid_idx ON rmc.target USING btree (tid);
 
 
 --
--- Name: target_tuniprot_idx; Type: INDEX; Schema: rmc; 
+-- Name: target_tuniprot_idx; Type: INDEX; Schema: rmc; Owner: -
 --
 
 CREATE INDEX target_tuniprot_idx ON rmc.target USING btree (tuniprot);
 
 
 --
--- Name: target_tuniprot_idx1; Type: INDEX; Schema: rmc; 
+-- Name: target_tuniprot_idx1; Type: INDEX; Schema: rmc; Owner: -
 --
 
 CREATE INDEX target_tuniprot_idx1 ON rmc.target USING btree (tuniprot);
