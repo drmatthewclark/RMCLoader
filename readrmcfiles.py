@@ -1,5 +1,5 @@
 # rmc file release number
-rmcversion = 'rx200171'
+rmcversion = '200171'
 dbname='mclark'
 debug = False
 
@@ -150,17 +150,18 @@ def readnextSDfile(file):
     tags = {}
     blanklinecount = 0
 
-    while line != '$$$$':
+    while  line != '$$$$':
         if line.startswith('>  <'):  # data tag
             tag = line[8:len(line)-1] # skip IDE. part of tag
-            data = file.readline().strip()
+            data = file.readline().strip().decode()
             sdfile = sdfile + nl + data
             file.readline()  # blank line at end
             sdfile = sdfile + nl
             if tag != 'RIGHT':   # skip copyright
                 tags[tag] = data
 
-        line = file.readline().rstrip()
+        line = file.readline().rstrip().decode()
+
         if (line == ''):
            blanklinecount += 1
            if blanklinecount > 4:
@@ -169,27 +170,29 @@ def readnextSDfile(file):
         else:
            blanklinecount = 0
 
-        sdfile = sdfile + line + nl
-  
+        sdfile = sdfile + line+ nl
+
     sdfile = sdfile.strip()[:sdfile.find('M  END')+6]
     # create smiles as it is much more compact than the sdfile
     # one can add the sdfile too if you want
+    smiles = ''
     try: 
         mol = Chem.MolFromMolBlock(sdfile)
         if mol:
-           smiles = Chem.MolToSmiles(mol)
+           smiles = Chem.MolToSmiles(mol, isomericSmiles=True,canonical=True)
            tags['smiles'] = smiles
         else:
            mol = '' 
     except:
         mol = ''
+ 
     return tags # dictionary 
 
 
 
 def readsdfiles(fname):
     """ read all of the individual SDFiles from the concatenated SDFile """
-    print(fname)
+    print('readsdfile ', fname)
     lg = RDLogger.logger()
     lg.setLevel(RDLogger.CRITICAL)
     count = 0
@@ -201,7 +204,7 @@ def readsdfiles(fname):
                 break;
             writedb(conn, sdrecord)
             count += 1
-            if (count % 50000 == 0):
+            if (count % 20000 == 0):
                 print(count)
 
     conn.commit()
@@ -224,9 +227,10 @@ def writedb(conn, data):
 
 
 def readsdfile():
-  """ read the SDFiles. This requires special functions because this is
-    not an XML file
+  """ read the SDFiles. This requires special functions because this is not an XML file
   """
   delete('rmc.sdfile')
-  for filepath in glob.iglob('./' + rmcversion + '*.sdf.gz'):
+  path = './' + rmcversion + '/*.sdf.gz' 
+  print(path)
+  for filepath in glob.iglob(path):
     readsdfiles(filepath)
