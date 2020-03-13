@@ -146,6 +146,7 @@ def readnextSDfile(file):
     return a dictionary with the SDFile tags and data, and the SDFile
     """
     line = '' # file.readline()
+    global notEof
     sdfile = 'Molname'
     tags = {}
     blanklinecount = 0
@@ -162,11 +163,10 @@ def readnextSDfile(file):
 
         line = file.readline().rstrip().decode()
 
-        if (line == ''):
+        if (len(line.strip()) == 0):
            blanklinecount += 1
-           if blanklinecount > 4:
-              tags = {}
-              break
+           if blanklinecount > 3:
+              return  'EOF'
         else:
            blanklinecount = 0
 
@@ -176,6 +176,10 @@ def readnextSDfile(file):
     # create smiles as it is much more compact than the sdfile
     # one can add the sdfile too if you want
     smiles = ''
+
+    if tags is not None and 'XRN' in tags.keys() and tags['XRN'] == '21291617':
+        sdfile = ''   
+      
     try: 
         mol = Chem.MolFromMolBlock(sdfile)
         if mol:
@@ -185,7 +189,8 @@ def readnextSDfile(file):
            mol = '' 
     except:
         mol = ''
- 
+    if debug:
+        print(tags) 
     return tags # dictionary 
 
 
@@ -198,14 +203,16 @@ def readsdfiles(fname):
     count = 0
     conn=psql.connect(user=dbname)
     with gzip.open(fname, 'r') as file:
+
         while True:
             sdrecord = readnextSDfile(file)
-            if len(sdrecord) < 2:
-                break;
-            writedb(conn, sdrecord)
-            count += 1
-            if (count % 20000 == 0):
-                print(count)
+            if sdrecord != 'EOF':
+                writedb(conn, sdrecord)
+                count += 1
+                if (count % 20000 == 0):
+                    print(count)
+            else:
+               break
 
     conn.commit()
     conn.close()
@@ -215,8 +222,10 @@ def readsdfiles(fname):
 
 def writedb(conn, data):
      """ write a SDFile record the database """
+     if  not 'XRN' in data.keys() or data['XRN'] == None or data['XRN'] == '':
+         return
 
-     sql = 'insert into rmc.sdfile (%s) values %s'
+     sql = 'insert into rmc.sdfile (%s) values %s on conflict(xrn) do nothing'
      with conn.cursor() as cur:
          columns = data.keys()
          values = [data[column] for column in columns]
@@ -229,7 +238,7 @@ def writedb(conn, data):
 def readsdfile():
   """ read the SDFiles. This requires special functions because this is not an XML file
   """
-  delete('rmc.sdfile')
+  #delete('rmc.sdfile')
   path = './' + rmcversion + '/*.sdf.gz' 
   print(path)
   for filepath in glob.iglob(path):
