@@ -1,0 +1,129 @@
+--
+-- Name: citation cid_key; Type: CONSTRAINT; Schema: rmc; Owner: -
+--
+
+ALTER TABLE ONLY rmc.citation
+    ADD CONSTRAINT cid_key PRIMARY KEY (cid);
+
+
+--
+-- Name: datapoint datapont_pkey; Type: CONSTRAINT; Schema: rmc; Owner: -
+--
+
+ALTER TABLE ONLY rmc.datapoint
+    ADD CONSTRAINT datapont_pkey PRIMARY KEY (did);
+
+
+--
+-- Name: assay key; Type: CONSTRAINT; Schema: rmc; Owner: -
+--
+
+ALTER TABLE ONLY rmc.assay
+    ADD CONSTRAINT key PRIMARY KEY (aid);
+
+
+--
+-- Name: fact pkey; Type: CONSTRAINT; Schema: rmc; Owner: -
+--
+
+ALTER TABLE ONLY rmc.fact
+    ADD CONSTRAINT pkey PRIMARY KEY (rxid);
+
+
+--
+-- Name: sdfile sdfile_key; Type: CONSTRAINT; Schema: rmc; Owner: -
+--
+
+ALTER TABLE ONLY rmc.sdfile
+    ADD CONSTRAINT sdfile_key PRIMARY KEY (xrn);
+
+
+--
+-- Name: target target_key; Type: CONSTRAINT; Schema: rmc; Owner: -
+--
+
+ALTER TABLE ONLY rmc.target
+    ADD CONSTRAINT target_key PRIMARY KEY (tid);
+
+
+--
+-- Name: citation_doi_idx; Type: INDEX; Schema: rmc; Owner: -
+--
+
+CREATE INDEX citation_doi_idx ON rmc.citation USING btree (doi);
+
+
+--
+-- Name: citation_pn_idx; Type: INDEX; Schema: rmc; Owner: -
+--
+
+CREATE INDEX citation_pn_idx ON rmc.citation USING btree (pn);
+
+
+--
+-- Name: datapoint_citation_idx; Type: INDEX; Schema: rmc; Owner: -
+--
+
+CREATE INDEX datapoint_citation_idx ON rmc.datapoint USING btree (citation);
+
+
+--
+-- Name: datapoint_did_idx; Type: INDEX; Schema: rmc; Owner: -
+--
+
+CREATE INDEX datapoint_did_idx ON rmc.datapoint USING btree (did);
+
+
+--
+-- Name: datapoint_substance_idx; Type: INDEX; Schema: rmc; Owner: -
+--
+
+CREATE INDEX datapoint_substance_idx ON rmc.datapoint USING btree (substance);
+
+
+--
+-- Name: datapoint_target_idx; Type: INDEX; Schema: rmc; Owner: -
+--
+
+CREATE INDEX datapoint_target_idx ON rmc.datapoint USING btree (target);
+
+
+--
+-- Name: fact_inchi_idx; Type: INDEX; Schema: rmc; Owner: -
+--
+
+CREATE INDEX fact_inchi_idx ON rmc.fact USING btree (inchi);
+
+
+--
+-- Name: sdfile_inchi_idx; Type: INDEX; Schema: rmc; Owner: -
+--
+
+CREATE INDEX sdfile_inchi_idx ON rmc.sdfile USING btree (inchi);
+
+
+--
+-- Name: target_tid_idx; Type: INDEX; Schema: rmc; Owner: -
+--
+
+CREATE INDEX target_tid_idx ON rmc.target USING btree (tid);
+
+
+--
+-- Name: target_tuniprot_idx; Type: INDEX; Schema: rmc; Owner: -
+--
+
+CREATE INDEX target_tuniprot_idx ON rmc.target USING btree (tuniprot);
+
+
+--
+-- Name: target_tuniprot_idx1; Type: INDEX; Schema: rmc; Owner: -
+--
+
+CREATE INDEX target_tuniprot_idx1 ON rmc.target USING btree (tuniprot);
+
+
+--
+-- PostgreSQL database dump complete
+--
+
