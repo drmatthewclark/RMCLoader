@@ -33,7 +33,6 @@ def readfile(fname, key, dbname, sql):
     sql - template sql statement to execute for storing the data
     """
     print(fname)
-    conn=psql.connect(user=dbname)
     tree = ET.parse(gzip.open(fname));
     root = tree.getroot()
     cur = conn.cursor()
@@ -79,25 +78,21 @@ def readfile(fname, key, dbname, sql):
        writedb(conn, data, sql)
 
     flush(conn) 
-    conn.close()
     print("\t%i records" % (len(lines)))
 
 
 def sqlfromfile(schemafile):
 
-    conn = psql.connect(user=dbname)
     with open(schemafile, 'r') as schema:
         f = schema.read()
         with conn.cursor() as cur:
             cur.execute(f)
-            print('created schema from', fname)
+            print('created schema from', schemafile)
 
     conn.commit()
-    conn.close()
 
-def initdb(conn):
+def initdb():
 
-    conn = psql.connect(user=dbname)
     """ initialize the database"""
     drop  = "drop schema rmc cascade;"
     schemafile = '../loader/rmc.schema'
@@ -107,11 +102,9 @@ def initdb(conn):
         print("dropped existing schema")
       except:
         print("failed to drop schema")
-        exit(5)
 
     conn.commit()
-    sqlfromfile(conn, schemafile)
-    conn.close()
+    sqlfromfile(schemafile)
    
 
 def readassay():
@@ -251,7 +244,7 @@ def writedb(conn, data, sql):
                 flush(conn)
    
 def flush(conn):
-""" flush the data cache to the database """
+  """ flush the data cache to the database """
   if (debug):
       print('flushed cache of ', len(insertcache) )
 
@@ -290,7 +283,7 @@ def load():
     readtarget()
     readsdfile()
 
-
+conn=psql.connect(user=dbname)
 initdb()
 load()
 # apply indices
