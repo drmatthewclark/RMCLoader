@@ -291,3 +291,4 @@ load()
 # apply indices
 sqlfromfile('../loader/rmc.index')
 
+print('completed')
