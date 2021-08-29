@@ -1,4 +1,5 @@
-#
+#!/usr/bin/python3
+
 # this is designed to run from the RMC version directory, e.g. 201857.
 # it further assumes that the loader information is in a directory ../loader from
 # that directory
@@ -14,6 +15,7 @@ from   psycopg2 import sql
 from   psycopg2.extensions import AsIs
 import glob
 import gzip
+import rdkit
 from   rdkit import Chem
 from   rdkit import RDLogger
 
@@ -87,7 +89,7 @@ def sqlfromfile(schemafile):
         f = schema.read()
         with conn.cursor() as cur:
             cur.execute(f)
-            print('created schema from', schemafile)
+            print('executing sql from', schemafile)
 
     conn.commit()
 
