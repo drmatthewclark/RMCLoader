@@ -19,7 +19,7 @@ SET row_security = off;
 --
 -- Name: rmc; Type: SCHEMA; Schema: -; Owner: -
 --
-
+DROP SCHEMA IF EXISTS RMC CASCADE;
 CREATE SCHEMA rmc;
 
 
@@ -30,7 +30,7 @@ SET default_with_oids = false;
 create table rmc.version (
  load_date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
  version text
-)
+);
 --
 -- Name: assay; Type: TABLE; Schema: rmc; Owner: -
 --
