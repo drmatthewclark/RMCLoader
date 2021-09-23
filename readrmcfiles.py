@@ -19,6 +19,7 @@ import rdkit
 from   rdkit import Chem
 from   rdkit import RDLogger
 from pathlib import Path
+import os
 
 # global db of hash of all lines added to databae
 lines = set()
