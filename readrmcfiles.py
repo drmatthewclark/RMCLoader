@@ -18,6 +18,7 @@ import gzip
 import rdkit
 from   rdkit import Chem
 from   rdkit import RDLogger
+from pathlib import Path
 
 # global db of hash of all lines added to databae
 lines = set()
@@ -278,6 +279,15 @@ def readsdfile():
 #
 
 def load():
+
+    path = Path('.')
+    version = os.path.basename(path.parent.absolute())
+    print('loading version', version)
+
+    with conn.cursor() as cur:
+       cur.execute('insert into reaxys.sff_version (version) values (%s);', (version,))
+       conn.commit()
+
     readassay()
     readcitation()
     readdatapoint()
