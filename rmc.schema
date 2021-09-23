@@ -145,7 +145,8 @@ CREATE TABLE rmc.sdfile (
     smiles text,
     fa text,
     rn text,
-    stype text
+    stype text,
+    molecule public.molecule
 )WITH (autovacuum_enabled='false');
 
 
