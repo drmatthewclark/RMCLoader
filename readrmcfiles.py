@@ -97,7 +97,7 @@ def initdb():
 
     """ initialize the database"""
     drop  = "drop schema rmc cascade;"
-    schemafile = '../loader/rmc.schema'
+    schemafile = '../RMCLoader/rmc.schema'
     with conn.cursor() as cur:
       try :
         cur.execute(drop)
@@ -289,6 +289,6 @@ conn=psql.connect(user=dbname)
 initdb()
 load()
 # apply indices
-sqlfromfile('../loader/rmc.index')
+sqlfromfile('../RMCLoader/rmc.index')
 
 print('completed')
