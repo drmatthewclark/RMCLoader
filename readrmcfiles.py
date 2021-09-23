@@ -99,7 +99,7 @@ def initdb():
 
     """ initialize the database"""
     drop  = "drop schema rmc cascade;"
-    schemafile = '../RMCLoader/rmc.schema'
+    schemafile = '../RMCLoader/rmc_schema'
     with conn.cursor() as cur:
       try :
         cur.execute(drop)
@@ -286,7 +286,7 @@ def load():
     print('loading version', version)
 
     with conn.cursor() as cur:
-       cur.execute('insert into reaxys.sff_version (version) values (%s);', (version,))
+       cur.execute('insert into rmc.version (version) values (%s);', (version,))
        conn.commit()
 
     readassay()
@@ -300,6 +300,6 @@ conn=psql.connect(user=dbname)
 initdb()
 load()
 # apply indices
-sqlfromfile('../RMCLoader/rmc.index')
+sqlfromfile('../RMCLoader/rmc_index')
 
 print('completed')
