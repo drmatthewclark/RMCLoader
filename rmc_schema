@@ -45,7 +45,7 @@ CREATE TABLE rmc.assay (
     acttrg text,
     model text,
     patho text
-) WITH (autovacuum_enabled='false');
+); 
 
 
 --
@@ -71,7 +71,7 @@ CREATE TABLE rmc.citation (
     doi text,
     cc text,
     lo text
-)WITH (autovacuum_enabled='false');
+);
 
 
 --
@@ -107,7 +107,7 @@ CREATE TABLE rmc.datapoint (
     dev text,
     pvalue text,
     ctype text
-)WITH (autovacuum_enabled='false');
+);
 
 
 --
@@ -129,7 +129,7 @@ CREATE TABLE rmc.fact (
     veber integer,
     rn text,
     clphase text
-)WITH (autovacuum_enabled='false');
+);
 
 
 --
@@ -147,7 +147,7 @@ CREATE TABLE rmc.sdfile (
     rn text,
     stype text,
     molecule public.mol
-)WITH (autovacuum_enabled='false');
+);
 
 
 --
@@ -178,9 +178,6 @@ CREATE TABLE rmc.target (
     pmid text[],
     pmprot text[],
     pmspecie text[]
-)WITH (autovacuum_enabled='false');
+);
 
-
-
---
 
