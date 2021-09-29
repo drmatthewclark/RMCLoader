@@ -5,13 +5,11 @@
 # that directory
 
 # owner of database or db to connect to
-dbname='mclark'
 debug = False
 CHUNKSIZE = 100000
 
 import xml.etree.ElementTree as ET
 import psycopg2 as psql
-from   psycopg2 import sql
 from   psycopg2.extensions import AsIs
 import glob
 import gzip
@@ -20,12 +18,14 @@ from   rdkit import Chem
 from   rdkit import RDLogger
 from pathlib import Path
 import os
+from dbconnect import getConnection
 
 # global db of hash of all lines added to databae
 lines = set()
 
 # shared cache of sql to execute
 insertcache = set()
+
 
 def readfile(fname, key, dbname, sql):
     """ 
@@ -212,7 +212,6 @@ def readsdfiles(fname):
     lg = RDLogger.logger()
     lg.setLevel(RDLogger.CRITICAL)
     count = 0
-    conn=psql.connect(user=dbname)
     with gzip.open(fname, 'r') as file:
 
         while True:
@@ -296,7 +295,7 @@ def load():
     readtarget()
     readsdfile()
 
-conn=psql.connect(user=dbname)
+conn=getConnection()
 initdb()
 load()
 # apply indices
