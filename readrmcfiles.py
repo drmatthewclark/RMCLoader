@@ -85,6 +85,7 @@ def readfile(fname, key, sql):
 
 def sqlfromfile(schemafile):
     conn2 = getConnection()
+
     with open(schemafile, 'r') as schema:
         print('executing sql from', schemafile)
         command = schema.read()
@@ -97,7 +98,8 @@ def initdb():
 
     """ initialize the database"""
     drop  = "drop schema rmc cascade;"
-    schemafile = '../RMCLoader/rmc_schema'
+    mydir = os.path.dirname(os.path.realpath(__file__))
+    schemafile = mydir + '/rmc_schema'
     with conn.cursor() as cur:
       try :
         cur.execute(drop)
@@ -296,7 +298,8 @@ def load():
 conn=getConnection()
 initdb()
 load()
+mydir = os.path.dirname(os.path.realpath(__file__))
 # apply indices
-sqlfromfile('../RMCLoader/rmc_index')
+sqlfromfile(mydir + '/rmc_index')
 
 print('completed')
