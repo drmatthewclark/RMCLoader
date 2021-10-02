@@ -84,14 +84,14 @@ def readfile(fname, key, sql):
 
 
 def sqlfromfile(schemafile):
-
+    conn2 = getConnection()
     with open(schemafile, 'r') as schema:
         print('executing sql from', schemafile)
         command = schema.read()
-        with conn.cursor() as cur:
+        with conn2.cursor() as cur:
              cur.execute(command)
-             conn.commit()
-
+             conn2.commit()
+    conn2.close()
 
 def initdb():
 
