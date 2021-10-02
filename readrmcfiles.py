@@ -27,13 +27,11 @@ lines = set()
 insertcache = set()
 
 
-def readfile(fname, key, dbname, sql):
+def readfile(fname, key, sql):
     """ 
     read an xml file into the designated database
-
     fname - xml file to read
     key - field for the object key
-    dbname - name for the database to store data to
     sql - template sql statement to execute for storing the data
     """
     print(fname)
@@ -88,12 +86,12 @@ def readfile(fname, key, dbname, sql):
 def sqlfromfile(schemafile):
 
     with open(schemafile, 'r') as schema:
-        f = schema.read()
+        print('executing sql from', schemafile)
+        command = schema.read()
         with conn.cursor() as cur:
-            cur.execute(f)
-            print('executing sql from', schemafile)
+             cur.execute(command)
+             conn.commit()
 
-    conn.commit()
 
 def initdb():
 
@@ -116,14 +114,14 @@ def readassay():
 
   sql = 'insert into rmc.assay (%s) values %s;'
   for filepath in glob.iglob('./*_assays_*.xml.gz'):
-    readfile(filepath, 'aid', dbname, sql)
+    readfile(filepath, 'aid', sql)
 
 
 def readcitation():
   """ read the citation files into the citation table """
   sql = 'insert into rmc.citation (%s) values %s;'
   for filepath in glob.iglob('./*_citations_*.xml.gz'):
-    readfile(filepath, 'cid', dbname, sql)
+    readfile(filepath, 'cid', sql)
 
 
 def readdatapoint():
@@ -131,14 +129,14 @@ def readdatapoint():
 
   sql = 'insert into rmc.datapoint (%s) values %s;'
   for filepath in glob.iglob( './*_datapoints_*.xml.gz'):
-    readfile(filepath, 'did', dbname, sql)
+    readfile(filepath, 'did', sql)
 
 
 def readfact():
   """ read the facts file into the fact table """
   sql = 'insert into rmc.fact (%s) values %s;'
   for filepath in glob.iglob('./*_facts_*.xml.gz'):
-    readfile(filepath, 'rxid', dbname, sql)
+    readfile(filepath, 'rxid', sql)
 
 
 def readtarget():
@@ -146,7 +144,7 @@ def readtarget():
     """
     sql = 'insert into rmc.target (%s) values %s;'
     for filepath in glob.iglob('./*_targets*.xml.gz'):
-        readfile(filepath, 'tid', dbname, sql)
+        readfile(filepath, 'tid', sql)
 
 nl = '\n'  # newline; cound be \r\n if necessary
 
