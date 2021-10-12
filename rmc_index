@@ -10,45 +10,34 @@ create index rmc_molecule_index on RMC.SDFILE using gist(molecule);
 ALTER TABLE ONLY rmc.citation
     ADD CONSTRAINT cid_key PRIMARY KEY (cid);
 
-
 ALTER TABLE ONLY rmc.datapoint
     ADD CONSTRAINT datapont_pkey PRIMARY KEY (did);
-
 
 ALTER TABLE ONLY rmc.assay
     ADD CONSTRAINT key PRIMARY KEY (aid);
 
-
 ALTER TABLE ONLY rmc.fact
     ADD CONSTRAINT pkey PRIMARY KEY (rxid);
-
 
 ALTER TABLE ONLY rmc.sdfile
     ADD CONSTRAINT sdfile_key PRIMARY KEY (xrn);
 
-
 ALTER TABLE ONLY rmc.target
     ADD CONSTRAINT target_key PRIMARY KEY (tid);
 
-
 CREATE INDEX citation_doi_idx ON rmc.citation USING btree (doi);
-
-
 CREATE INDEX citation_pn_idx ON rmc.citation USING btree (pn);
-
 CREATE INDEX datapoint_citation_idx ON rmc.datapoint USING btree (citation);
-
 CREATE INDEX datapoint_did_idx ON rmc.datapoint USING btree (did);
-
 CREATE INDEX datapoint_substance_idx ON rmc.datapoint USING btree (substance);
-
 CREATE INDEX datapoint_target_idx ON rmc.datapoint USING btree (target);
-
 CREATE INDEX fact_inchi_idx ON rmc.fact USING btree (inchi);
-
 CREATE INDEX sdfile_inchi_idx ON rmc.sdfile USING btree (inchi);
-
 CREATE INDEX target_tid_idx ON rmc.target USING btree (tid);
-
 CREATE INDEX target_tuniprot_idx ON rmc.target USING gin(tuniprot);
+
+ALTER TABLE rmc.datapoint add constraint assay_link     foreign key (assay)     references rmc.assay(aid);
+ALTER TABLE rmc.datapoint add constraint substance_link foreign key (substance) references rmc.sdfile(xrn);
+ALTER TABLE rmc.datapoint add constraint target_link    foreign key (target)    references rmc.target(tid);
+ALTER TABLE rmc.datapoint add constraint citation_link  foreign key (citation)  references rmc.citation(cid);
 
