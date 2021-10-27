@@ -4,40 +4,44 @@
 
 -- update before indexing
 
-UPDATE RMC.SDFILE SET molecule = mol_from_smiles(smiles::cstring);
-create index rmc_molecule_index on RMC.SDFILE using gist(molecule);
+UPDATE RMC_TEMP.SDFILE SET molecule = mol_from_smiles(smiles::cstring);
+create index rmc_molecule_index on RMC_TEMP.SDFILE using gist(molecule);
 
-ALTER TABLE ONLY rmc.citation
+ALTER TABLE ONLY RMC_TEMP.citation
     ADD CONSTRAINT cid_key PRIMARY KEY (cid);
 
-ALTER TABLE ONLY rmc.datapoint
+ALTER TABLE ONLY RMC_TEMP.datapoint
     ADD CONSTRAINT datapont_pkey PRIMARY KEY (did);
 
-ALTER TABLE ONLY rmc.assay
+ALTER TABLE ONLY RMC_TEMP.assay
     ADD CONSTRAINT key PRIMARY KEY (aid);
 
-ALTER TABLE ONLY rmc.fact
+ALTER TABLE ONLY RMC_TEMP.fact
     ADD CONSTRAINT pkey PRIMARY KEY (rxid);
 
-ALTER TABLE ONLY rmc.sdfile
+ALTER TABLE ONLY RMC_TEMP.sdfile
     ADD CONSTRAINT sdfile_key PRIMARY KEY (xrn);
 
-ALTER TABLE ONLY rmc.target
+ALTER TABLE ONLY RMC_TEMP.target
     ADD CONSTRAINT target_key PRIMARY KEY (tid);
 
-CREATE INDEX citation_doi_idx ON rmc.citation USING btree (doi);
-CREATE INDEX citation_pn_idx ON rmc.citation USING btree (pn);
-CREATE INDEX datapoint_citation_idx ON rmc.datapoint USING btree (citation);
-CREATE INDEX datapoint_did_idx ON rmc.datapoint USING btree (did);
-CREATE INDEX datapoint_substance_idx ON rmc.datapoint USING btree (substance);
-CREATE INDEX datapoint_target_idx ON rmc.datapoint USING btree (target);
-CREATE INDEX fact_inchi_idx ON rmc.fact USING btree (inchi);
-CREATE INDEX sdfile_inchi_idx ON rmc.sdfile USING btree (inchi);
-CREATE INDEX target_tid_idx ON rmc.target USING btree (tid);
-CREATE INDEX target_tuniprot_idx ON rmc.target USING gin(tuniprot);
+CREATE INDEX citation_doi_idx ON RMC_TEMP.citation USING btree (doi);
+CREATE INDEX citation_pn_idx ON RMC_TEMP.citation USING btree (pn);
+CREATE INDEX datapoint_citation_idx ON RMC_TEMP.datapoint USING btree (citation);
+CREATE INDEX datapoint_did_idx ON RMC_TEMP.datapoint USING btree (did);
+CREATE INDEX datapoint_substance_idx ON RMC_TEMP.datapoint USING btree (substance);
+CREATE INDEX datapoint_target_idx ON RMC_TEMP.datapoint USING btree (target);
+CREATE INDEX fact_inchi_idx ON RMC_TEMP.fact USING btree (inchi);
+CREATE INDEX sdfile_inchi_idx ON RMC_TEMP.sdfile USING btree (inchi);
+CREATE INDEX target_tid_idx ON RMC_TEMP.target USING btree (tid);
+CREATE INDEX target_tuniprot_idx ON RMC_TEMP.target USING gin(tuniprot);
 
-ALTER TABLE rmc.datapoint add constraint assay_link     foreign key (assay)     references rmc.assay(aid);
-ALTER TABLE rmc.datapoint add constraint substance_link foreign key (substance) references rmc.sdfile(xrn);
-ALTER TABLE rmc.datapoint add constraint target_link    foreign key (target)    references rmc.target(tid);
-ALTER TABLE rmc.datapoint add constraint citation_link  foreign key (citation)  references rmc.citation(cid);
+ALTER TABLE RMC_TEMP.datapoint add constraint assay_link     foreign key (assay)     references RMC_TEMP.assay(aid);
+ALTER TABLE RMC_TEMP.datapoint add constraint substance_link foreign key (substance) references RMC_TEMP.sdfile(xrn);
+ALTER TABLE RMC_TEMP.datapoint add constraint target_link    foreign key (target)    references RMC_TEMP.target(tid);
+
+-- 
+-- bug in RMC data causes this to fail
+--
+-- ALTER TABLE RMC_TEMP.datapoint add constraint citation_link  foreign key (citation)  references RMC_TEMP.citation(cid);
 

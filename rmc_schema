@@ -19,15 +19,15 @@ SET row_security = off;
 --
 -- Name: rmc; Type: SCHEMA; Schema: -; Owner: -
 --
-DROP SCHEMA IF EXISTS RMC CASCADE;
-CREATE SCHEMA rmc;
+DROP SCHEMA IF EXISTS RMC_TEMP CASCADE;
+CREATE SCHEMA rmc_TEMP;
 
 
 SET default_tablespace = '';
 
 SET default_with_oids = false;
 
-create table rmc.version (
+create table RMC_TEMP.version (
  load_date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
  version text
 );
@@ -35,7 +35,7 @@ create table rmc.version (
 -- Name: assay; Type: TABLE; Schema: rmc; Owner: -
 --
 
-CREATE TABLE rmc.assay (
+CREATE TABLE RMC_TEMP.assay (
     aid bigint NOT NULL,
     aftype text,
     categ text,
@@ -52,7 +52,7 @@ CREATE TABLE rmc.assay (
 -- Name: citation; Type: TABLE; Schema: rmc; Owner: -
 --
 
-CREATE TABLE rmc.citation (
+CREATE TABLE RMC_TEMP.citation (
     cid bigint NOT NULL,
     dt text,
     pa text,
@@ -78,7 +78,7 @@ CREATE TABLE rmc.citation (
 -- Name: datapoint; Type: TABLE; Schema: rmc; Owner: -
 --
 
-CREATE TABLE rmc.datapoint (
+CREATE TABLE RMC_TEMP.datapoint (
     citation bigint,
     bioactivity bigint,
     target bigint,
@@ -114,7 +114,7 @@ CREATE TABLE rmc.datapoint (
 -- Name: fact; Type: TABLE; Schema: rmc; Owner: -
 --
 
-CREATE TABLE rmc.fact (
+CREATE TABLE RMC_TEMP.fact (
     rxid bigint NOT NULL,
     cn text,
     mf text,
@@ -136,7 +136,7 @@ CREATE TABLE rmc.fact (
 -- Name: sdfile; Type: TABLE; Schema: rmc; Owner: -
 --
 
-CREATE TABLE rmc.sdfile (
+CREATE TABLE RMC_TEMP.sdfile (
     xrn bigint NOT NULL,
     mf text,
     mw text,
@@ -154,7 +154,7 @@ CREATE TABLE rmc.sdfile (
 -- Name: target; Type: TABLE; Schema: rmc; Owner: -
 --
 
-CREATE TABLE rmc.target (
+CREATE TABLE RMC_TEMP.target (
     tid bigint NOT NULL,
     role text,
     key text,
