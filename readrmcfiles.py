@@ -26,6 +26,8 @@ lines = set()
 # shared cache of sql to execute
 insertcache = set()
 
+schema = 'RMC_TEMP'
+
 
 def readfile(fname, key, sql):
     """ 
@@ -84,20 +86,24 @@ def readfile(fname, key, sql):
 
 
 def sqlfromfile(schemafile):
-    conn2 = getConnection()
+    try:
+       conn2 = getConnection()
+	
+       with open(schemafile, 'r') as schema:
+          print('executing sql from', schemafile)
+          command = schema.read()
+          with conn2.cursor() as cur:
+              cur.execute(command)
+              conn2.commit()
 
-    with open(schemafile, 'r') as schema:
-        print('executing sql from', schemafile)
-        command = schema.read()
-        with conn2.cursor() as cur:
-             cur.execute(command)
-             conn2.commit()
-    conn2.close()
+       conn2.close()
+    except:
+        print('caught error')
 
 def initdb():
 
     """ initialize the database"""
-    drop  = "drop schema rmc cascade;"
+    drop  = "drop schema " + schema + " cascade;"
     mydir = os.path.dirname(os.path.realpath(__file__))
     schemafile = mydir + '/rmc_schema'
     with conn.cursor() as cur:
@@ -114,14 +120,14 @@ def initdb():
 def readassay():
   """ read the assay data files into the assay table """
 
-  sql = 'insert into rmc.assay (%s) values %s;'
+  sql = 'insert into ' + schema + '.assay (%s) values %s;'
   for filepath in glob.iglob('./*_assays_*.xml.gz'):
     readfile(filepath, 'aid', sql)
 
 
 def readcitation():
   """ read the citation files into the citation table """
-  sql = 'insert into rmc.citation (%s) values %s;'
+  sql = 'insert into ' + schema + '.citation (%s) values %s;'
   for filepath in glob.iglob('./*_citations_*.xml.gz'):
     readfile(filepath, 'cid', sql)
 
@@ -129,14 +135,14 @@ def readcitation():
 def readdatapoint():
   """ read the datapoint files into the datapoint table """
 
-  sql = 'insert into rmc.datapoint (%s) values %s;'
+  sql = 'insert into ' + schema + '.datapoint (%s) values %s;'
   for filepath in glob.iglob( './*_datapoints_*.xml.gz'):
     readfile(filepath, 'did', sql)
 
 
 def readfact():
   """ read the facts file into the fact table """
-  sql = 'insert into rmc.fact (%s) values %s;'
+  sql = 'insert into ' + schema + '.fact (%s) values %s;'
   for filepath in glob.iglob('./*_facts_*.xml.gz'):
     readfile(filepath, 'rxid', sql)
 
@@ -144,7 +150,7 @@ def readfact():
 def readtarget():
     """ read the targets file into the target table
     """
-    sql = 'insert into rmc.target (%s) values %s;'
+    sql = 'insert into ' + schema + '.target (%s) values %s;'
     for filepath in glob.iglob('./*_targets*.xml.gz'):
         readfile(filepath, 'tid', sql)
 
@@ -208,7 +214,7 @@ def readnextSDfile(file):
 def readsdfiles(fname):
     """ read all of the individual SDFiles from the concatenated SDFile """
     print('readsdfile ', fname)
-    sql = 'insert into rmc.sdfile (%s) values %s;'
+    sql = 'insert into ' + schema + '.sdfile (%s) values %s;'
     lg = RDLogger.logger()
     lg.setLevel(RDLogger.CRITICAL)
     count = 0
@@ -285,7 +291,7 @@ def load():
     print('loading version', version)
 
     with conn.cursor() as cur:
-       cur.execute('insert into rmc.version (version) values (%s);', (version,))
+       cur.execute('insert into ' + schema + '.version (version) values (%s);', (version,))
        conn.commit()
 
     readassay()
@@ -295,11 +301,21 @@ def load():
     readtarget()
     readsdfile()
 
+
+
 conn=getConnection()
 initdb()
 load()
 mydir = os.path.dirname(os.path.realpath(__file__))
+
 # apply indices
 sqlfromfile(mydir + '/rmc_index')
+
+with conn.cursor() as cur:
+    print('switching schema names')
+    cur.execute('drop schema rmc cascade')
+    conn.commit()
+    cur.execute('alter schema ' + schema + ' rename to rmc')
+    conn.commit()
 
 print('completed')
