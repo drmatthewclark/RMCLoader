@@ -313,7 +313,7 @@ sqlfromfile(mydir + '/rmc_index')
 
 with conn.cursor() as cur:
     print('switching schema names')
-    cur.execute('drop schema rmc cascade')
+    cur.execute('drop schema if exists rmc cascade')
     conn.commit()
     cur.execute('alter schema ' + schema + ' rename to rmc')
     conn.commit()
