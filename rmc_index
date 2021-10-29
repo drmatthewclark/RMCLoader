@@ -31,6 +31,8 @@ CREATE INDEX datapoint_citation_idx ON RMC_TEMP.datapoint USING btree (citation)
 CREATE INDEX datapoint_substance_idx ON RMC_TEMP.datapoint USING btree (substance);
 CREATE INDEX datapoint_target_idx ON RMC_TEMP.datapoint USING btree (target);
 CREATE INDEX fact_inchi_idx ON RMC_TEMP.fact USING btree (inchi);
+CREATE INDEX fact_cn_idx ON RMC_TEMP.fact USING btree (cn);
+CREATE INDEX fact_clphase_idx ON RMC_TEMP.fact USING btree (clphase);
 CREATE INDEX sdfile_inchi_idx ON RMC_TEMP.sdfile USING btree (inchi);
 CREATE INDEX target_tuniprot_idx ON RMC_TEMP.target USING gin(tuniprot);
 
