@@ -20,7 +20,7 @@ SET row_security = off;
 -- Name: rmc; Type: SCHEMA; Schema: -; Owner: -
 --
 DROP SCHEMA IF EXISTS RMC_TEMP CASCADE;
-CREATE SCHEMA rmc_TEMP;
+CREATE SCHEMA RMC_TEMP;
 
 
 SET default_tablespace = '';
