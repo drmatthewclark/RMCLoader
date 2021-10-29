@@ -314,4 +314,5 @@ with conn.cursor() as cur:
     cur.execute('alter schema ' + schema + ' rename to rmc')
     conn.commit()
 
+conn.close()
 print('completed')
