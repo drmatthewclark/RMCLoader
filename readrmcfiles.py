@@ -192,10 +192,6 @@ def readnextSDfile(file):
     # one can add the sdfile too if you want
     smiles = ''
 
-    # one particular file seems to be problematic
-    if tags is not None and 'XRN' in tags.keys() and tags['XRN'] == '21291617':
-        sdfile = ''   
-      
     try: 
         mol = Chem.MolFromMolBlock(sdfile)
         if mol:
