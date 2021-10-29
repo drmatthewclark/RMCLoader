@@ -28,12 +28,10 @@ ALTER TABLE ONLY RMC_TEMP.target
 CREATE INDEX citation_doi_idx ON RMC_TEMP.citation USING btree (doi);
 CREATE INDEX citation_pn_idx ON RMC_TEMP.citation USING btree (pn);
 CREATE INDEX datapoint_citation_idx ON RMC_TEMP.datapoint USING btree (citation);
-CREATE INDEX datapoint_did_idx ON RMC_TEMP.datapoint USING btree (did);
 CREATE INDEX datapoint_substance_idx ON RMC_TEMP.datapoint USING btree (substance);
 CREATE INDEX datapoint_target_idx ON RMC_TEMP.datapoint USING btree (target);
 CREATE INDEX fact_inchi_idx ON RMC_TEMP.fact USING btree (inchi);
 CREATE INDEX sdfile_inchi_idx ON RMC_TEMP.sdfile USING btree (inchi);
-CREATE INDEX target_tid_idx ON RMC_TEMP.target USING btree (tid);
 CREATE INDEX target_tuniprot_idx ON RMC_TEMP.target USING gin(tuniprot);
 
 ALTER TABLE RMC_TEMP.datapoint add constraint assay_link     foreign key (assay)     references RMC_TEMP.assay(aid);
