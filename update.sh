@@ -9,9 +9,8 @@ profile=$2  # example: rmc
 list=`aws  --profile ${profile} s3 ls ${data}/ | sed 's/[^0-9]*//g' | sort -n -r | head -n 2`
 
 for release in $list; do
-	echo "downloading $release ..."
 	if [ -d ${release} ]; then
-	       echo "${release} already downloaded, processing stopped"
+	       echo "${release} already downloaded"
 	       exit 0 # already downloaded
 	fi
 
@@ -22,6 +21,7 @@ for release in $list; do
 		echo "...${release} downloaded"
 		return 0 # exit if success
 	else
+		echo "error downloading ${release}"
 		rm -r "${release}"
 	fi
 done
