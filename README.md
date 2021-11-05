@@ -5,7 +5,7 @@ Access to the RMC data files is by licence from Elsevier.
 requires RDkit to convert the SDfiles into SMILES strings
 <br><br>
 1. download RMC files from Elsevier. Do not uncompress<br>
-4. modify dbname in readrmcfiles.py<br>
+4. create file with credentials "credentials.py"  with database location and credentials<br>
 5. run readrmcfiles.py, it will create the database, load the files, and apply indices<br>
 6. enjoy!<br>
 
