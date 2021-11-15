@@ -14,7 +14,7 @@ for release in $list; do
 	       exit 0 # already downloaded
 	fi
 
-	aws --profile ${profile}  s3 cp s3://${data}/${release} ./${release} --recursive
+	aws --profile ${profile}  s3 cp s3://${data}/${release} ./${release} --recursive --no-progress
 	ecode=$?
 
 	if [ $ecode = 0 ]; then 

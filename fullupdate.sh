@@ -12,4 +12,4 @@ conda activate standard
 echo "starting load `pwd`"
 date
 time python -u ../RMCLoader/readrmcfiles.py
-../../fix-perms
+
