@@ -4,7 +4,9 @@
 # this assumes that you have the keys and coordinates for the data stored in an
 echo -n "rmc "
 source update.sh
-update rmc-ff-download rmc
+source ./RMCLoader/credentials.py
+
+update $rmc_location $rmc_name 
 
 eval "$(conda shell.bash hook)"
 cd ${release}
