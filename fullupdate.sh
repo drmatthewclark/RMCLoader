@@ -15,3 +15,17 @@ echo "starting load `pwd`"
 date
 time python -u ../RMCLoader/readrmcfiles.py
 
+cd ..
+
+del() {
+  shift
+  for d in $*; do
+        echo 'removing dataset' $d
+        rm -r "${d}"
+  done
+
+}
+
+dirs=`ls -dc 2[0-9]*`
+del ${dirs}
+
