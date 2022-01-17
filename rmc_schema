@@ -80,7 +80,6 @@ CREATE TABLE RMC_TEMP.citation (
 
 CREATE TABLE RMC_TEMP.datapoint (
     citation bigint,
-    bioactivity bigint,
     target bigint,
     substance bigint,
     assay bigint,
@@ -90,7 +89,6 @@ CREATE TABLE RMC_TEMP.datapoint (
     exact text,
     unit text,
     paureus real,
-    paurig text,
     did bigint NOT NULL,
     mroute text,
     value text,
